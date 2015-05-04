@@ -1,5 +1,6 @@
 package pieces;
-import point.*;
+import point.Point;
+import board.Board;
 
 public class Pawn extends Piece {
 	private boolean hasMoved = false;
@@ -9,14 +10,8 @@ public class Pawn extends Piece {
 		this.isWhite = isWhite;
 	} // End constructor
 	
-	public boolean move(Piece [][] board, Point location) {
-		if (hasMoved == false) {
-			return true;
-		}
-		else {
-			hasMoved = true;
-			return false;
-		}
+	public boolean canMove(Board board, Point location) {
+		return true;
 	} // End move
 	public void capture(Piece [][] board, Point location) {
 		

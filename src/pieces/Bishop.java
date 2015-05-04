@@ -1,4 +1,5 @@
 package pieces;
+import board.Board;
 import point.*;
 
 public class Bishop extends Piece {
@@ -6,7 +7,7 @@ public class Bishop extends Piece {
 		this.location = location;
 		this.isWhite = isWhite;
 	} // End constructor
-	public boolean move(Piece [][] board, Point location) {
+	public boolean canMove(Board board, Point location) {
 		return true;
 	} // End move
 	public void capture(Piece [][] board, Point location) {

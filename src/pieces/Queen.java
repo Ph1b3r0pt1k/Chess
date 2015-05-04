@@ -1,14 +1,15 @@
 package pieces;
-import point.*;
+import point.Point;
+import board.Board;
 
 public class Queen extends Piece {
 	public Queen (Point location, boolean isWhite) {
 		this.location = location;
 		this.isWhite = isWhite;
 	} // end constructor
-	public boolean move(Piece [][] board, Point location) {
+	public boolean canMove(Board board, Point location) {
 		return true;
-	} // end move
+	} // End move
 	
 	public String toString() {
 		if (isWhite == true) {
