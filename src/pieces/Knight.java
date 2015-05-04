@@ -1,6 +1,8 @@
 package pieces;
-import point.Point;
+import java.util.*;
+
 import board.Board;
+import point.Point;
 import exceptions.InvalidPointException;
 import exceptions.NoPieceAtPointException;
 
@@ -9,10 +11,7 @@ public class Knight extends Piece {
 		this.location = location;
 		this.isWhite = isWhite;
 	} // End constructor
-	public boolean isEnemy(Board board, Point loc) throws InvalidPointException, NoPieceAtPointException {
-		return true;
-	} // End move
-	
+
 	public String toString() {
 		if (isWhite == true) {
 			return "WN";
@@ -22,8 +21,38 @@ public class Knight extends Piece {
 		}
 	} // End toString
 	@Override
-	public boolean canMove(Board board, Point location) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean canMove(Point dst) {
+		try {
+			if (Board.getInstance().isInvalidPoint(dst)) {
+				return false;
+			}
+			for (Point p : this.generateMoves()) {
+				if (p.getX() == dst.getX() && p.getY() == dst.getY()) {
+					if (isFriendly(dst)) {
+						return false;
+					} else {
+						return true;
+					}
+				}
+			} // end for
+			return false;
+		} catch (InvalidPointException e) {
+			System.out.println("Can't move. Invalid point exception.");
+			return false;
+		} catch (NoPieceAtPointException e) {
+			return true;
+		}
+	} // end canMove
+	private ArrayList<Point> generateMoves() {
+		ArrayList<Point> moves = new ArrayList<Point>();
+		moves.add(new Point(location.getX() + 2, location.getY() + 1));
+		moves.add(new Point(location.getX() + 2, location.getY() - 1));
+		moves.add(new Point(location.getX() + 1, location.getY() + 2));
+		moves.add(new Point(location.getX() + 1, location.getY() - 2));
+		moves.add(new Point(location.getX() - 2, location.getY() + 1));
+		moves.add(new Point(location.getX() - 2, location.getY() - 1));
+		moves.add(new Point(location.getX() - 1, location.getY() + 2));
+		moves.add(new Point(location.getX() - 1, location.getY() - 2));
+		return moves;
 	}
 } // End class

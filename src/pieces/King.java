@@ -1,5 +1,5 @@
 package pieces;
-import board.Board;
+import board.*;
 import point.*;
 
 public class King extends Piece {
@@ -9,12 +9,9 @@ public class King extends Piece {
 		this.location = location;
 		this.isWhite = isWhite;
 	}
-	public boolean canMove(Board board, Point location) {
+	public boolean canMove(Point location) {
 		return true;
 	} // End move
-	public void capture(Piece [][] board, Point location) {
-		
-	} // End capture
 	
 	public String toString() {
 		if (isWhite == true) {

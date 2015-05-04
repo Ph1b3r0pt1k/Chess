@@ -1,15 +1,14 @@
 package pieces;
-import point.Point;
-import board.Board;
-import exceptions.InvalidPointException;
-import exceptions.NoPieceAtPointException;
+import point.*;
+import board.*;
+import exceptions.*;
 
 public class Rook extends Piece {
 	public Rook(Point location, boolean isWhite) {
 		this.location = location;
 		this.isWhite = isWhite;
 	} // end constructor
-	public boolean canMove(Board board, Point dst) {
+	public boolean canMove(Point dst) {
 		int src_x = location.getX();
 		int src_y = location.getY();
 		int dst_x = dst.getX();
@@ -26,7 +25,7 @@ public class Rook extends Piece {
 					System.out.println("moving right");
 				}
 				for (int i = src_x + j; i != dst_x; i += j) {
-					if (!board.thereIsPiece(new Point(i, src_y))) {
+					if (!Board.getInstance().thereIsPiece(new Point(i, src_y))) {
 						// keep going
 					} else {
 						System.out.println("Invalid move.");
@@ -34,7 +33,7 @@ public class Rook extends Piece {
 					}
 				} // end for
 				
-				if (isFriendly(board, dst)) {
+				if (isFriendly(dst)) {
 					return false;
 				} else {
 					return true;
@@ -51,7 +50,7 @@ public class Rook extends Piece {
 					System.out.println("moving up");
 				}
 				for (int i = src_y + j; i != dst_y; i += j) {
-					if (!board.thereIsPiece(new Point(src_x, i))) {
+					if (!Board.getInstance().thereIsPiece(new Point(src_x, i))) {
 						// keep going
 					}
 					else {
@@ -59,7 +58,7 @@ public class Rook extends Piece {
 					}
 				}
 				System.out.println("Something");
-				if (isFriendly(board, dst)) {
+				if (isFriendly(dst)) {
 					return false;
 				} else {
 					return true;
@@ -74,8 +73,6 @@ public class Rook extends Piece {
 			System.out.println("Can't move. Invalid point exception.");
 			return false;
 		} catch (NoPieceAtPointException e) {
-			//System.out.println("Can't move. No piece at point exception.");
-			//return false;
 			return true;
 		}
 

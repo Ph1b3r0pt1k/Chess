@@ -7,7 +7,7 @@ public class Queen extends Piece {
 		this.location = location;
 		this.isWhite = isWhite;
 	} // end constructor
-	public boolean canMove(Board board, Point location) {
+	public boolean canMove(Point location) {
 		return true;
 	} // End move
 	

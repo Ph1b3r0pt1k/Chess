@@ -1,29 +1,18 @@
 package board;
-import java.util.HashMap;
-
-import pieces.Bishop;
-import pieces.King;
-import pieces.Knight;
-import pieces.Pawn;
-import pieces.Piece;
-import pieces.Queen;
-import pieces.Rook;
-import point.Point;
-import exceptions.InvalidPointException;
-import exceptions.NoPieceAtPointException;
+import java.util.*;
+import pieces.*;
+import point.*;
+import exceptions.*;
 
 public class Board {
+	
+	private static Board singletonBoard;
 	private static int BOARD_SIZE = 8;
-	//private Piece [][] board = null;
 	public HashMap<Integer, Piece> board;
 	
-	
-	public Board(Piece [][] array) {
-		
-	}
-	public Board() {
+	private Board() {
 		board = new HashMap<Integer, Piece>();
-		//board = new Piece[BOARD_SIZE][BOARD_SIZE];
+
 		// White pieces
 		board.put(new Point(0, 0).hashCode(), new Rook(new Point(0, 0), true));
 		board.put(new Point(1, 0).hashCode(), new Knight(new Point(1, 0), true));
@@ -33,24 +22,11 @@ public class Board {
 		board.put(new Point(5, 0).hashCode(), new Bishop(new Point(5, 0), true));
 		board.put(new Point(6, 0).hashCode(), new Knight(new Point(6, 0), true));
 		board.put(new Point(7, 0).hashCode(), new Rook(new Point(7, 0), true));
-		/*for (int i = 0; i < BOARD_SIZE; i++) {
+		for (int i = 0; i < BOARD_SIZE; i++) {
 			board.put(new Point(i, 1).hashCode(), new Pawn(new Point(i, 1), true));
-		}*/
+		}
 
 		// Black pieces
-		/*
-		board[7][0] = new Rook(new Point(7, 0), false);
-		board[7][1] = new Knight(new Point(7, 1), false);
-		board[7][2] = new Bishop(new Point(7, 2), false);
-		board[7][3] = new Queen(new Point(7, 3), false);
-		board[7][4] = new King(new Point(7, 4), false);
-		board[7][5] = new Bishop(new Point(7, 5), false);
-		board[7][6] = new Knight(new Point(7, 6), false);
-		board[7][7] = new Rook(new Point(7, 7), false);
-		for (int i = 0; i < board.length; i++) {
-			board[6][i] = new Pawn(new Point(6, i), false);
-		}
-		*/
 		board.put(new Point(0, 7).hashCode(), new Rook(new Point(0, 7), false));
 		board.put(new Point(1, 7).hashCode(), new Knight(new Point(1, 7), false));
 		board.put(new Point(2, 7).hashCode(), new Bishop(new Point(2, 7), false));
@@ -64,6 +40,14 @@ public class Board {
 		}
 	}
 	
+	public static Board getInstance() {
+		if (singletonBoard == null) {
+			singletonBoard = new Board();
+		}
+		
+		return singletonBoard;
+	}
+	
 	private Piece pieceAtPoint(Point p) {
 		return board.get(p.hashCode());
 		//return board[p.getX()][p.getY()];
@@ -75,8 +59,12 @@ public class Board {
 	}
 	
 	public boolean move(Point src, Point dst) {
+		if (isInvalidPoint(dst)) {
+			return false;
+		}
+		
 		Piece sourcePiece = pieceAtPoint(src);
-		if (sourcePiece.canMove(this, dst)) {
+		if (sourcePiece.canMove(dst)) {
 			// update board in Board
 			setPieceAtPoint(dst, sourcePiece);
 			setPieceAtPoint(src, null);
@@ -92,12 +80,12 @@ public class Board {
 		}
 	}
 	
-	private boolean isInValidPoint(Point pt) {
+	public boolean isInvalidPoint(Point pt) {
 		return (pt.getX() < 0) || (pt.getX() >= BOARD_SIZE) || (pt.getY() < 0) || (pt.getY() >= BOARD_SIZE);
 	}
 	
 	public boolean thereIsPiece(Point pt) throws InvalidPointException {
-		if (isInValidPoint(pt)) {
+		if (isInvalidPoint(pt)) {
 			throw new InvalidPointException();
 		}
 		if (board.get(pt.hashCode()) != null) {
@@ -149,21 +137,9 @@ public class Board {
 	}
 	
 	public static void main(String [] args) {
-		Board board = new Board();
+		Board board = Board.getInstance();
 		System.out.println(board);
-		
-		Point sourcePoint = new Point(0, 0);
-		
-		Point dstPoint = new Point(0, 3);
-		System.out.println(board.move(sourcePoint, dstPoint));
-		System.out.println(board);
-		System.out.println(board.move(dstPoint, new Point(5, 3)));
-		System.out.println(board);
-		System.out.println(board.move(new Point(5, 3), new Point(5, 6)));
-		System.out.println(board);
-		System.out.println(board.move(new Point(5, 6), new Point(7, 7)));
-		System.out.println(board);
-		System.out.println(board.move(new Point(5, 6), new Point(5, 0)));
+		System.out.println(board.move(new Point(0, 6), new Point(0, 5)));
 		System.out.println(board);
 	}
 }
