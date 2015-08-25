@@ -78,7 +78,35 @@ public class Board {
 			System.out.println("Board: can't move");
 			return false;
 		}
-	}
+	} // end move
+	
+	public static Point convertSquareToPoint(String square) {
+		int x = -1;
+		int y = -1;
+		char rank, file;
+		
+		file = square.charAt(0);
+		if (file == 'a') x = 0;
+		if (file == 'b') x = 1;
+		if (file == 'c') x = 2;
+		if (file == 'd') x = 3;
+		if (file == 'e') x = 4;
+		if (file == 'f') x = 5;
+		if (file == 'g') x = 6;
+		if (file == 'h') x = 7;
+		
+		rank = square.charAt(1);
+		if (rank == '1') y = 0;
+		if (rank == '2') y = 1;
+		if (rank == '3') y = 2;
+		if (rank == '4') y = 3;
+		if (rank == '5') y = 4;
+		if (rank == '6') y = 5;
+		if (rank == '7') y = 6;
+		if (rank == '8') y = 7;
+		
+		return new Point(x,y);
+	} // end convertSquareToPoint
 	
 	public boolean isInvalidPoint(Point pt) {
 		return (pt.getX() < 0) || (pt.getX() >= BOARD_SIZE) || (pt.getY() < 0) || (pt.getY() >= BOARD_SIZE);
@@ -92,7 +120,7 @@ public class Board {
 			return true;
 		}
 		else return false;
-	}
+	} // end thereIsPiece
 	
 	public boolean isWhite(Point pt) throws InvalidPointException, NoPieceAtPointException {
 		
@@ -104,21 +132,7 @@ public class Board {
 			return true;
 		}
 		else return false;
-	}
-
-	/**
-	 * Method which makes the board and assigns each square an appropriate value.
-	 * @return the board, a two-dimensional string array
-	 */
-	public static Point [][] makePoints () {
-		Point [][] ptArray = new Point[8][8];
-		for (int i = 0; i < ptArray.length; i++) {
-			for (int j = 0; j < ptArray.length; j++) {
-				ptArray[i][j] = new Point(i,j);
-			}
-		}
-		return ptArray;
-	}
+	} // end isWhite
 	
 	public String toString() {
 		String s = "";
@@ -134,12 +148,10 @@ public class Board {
 			s += "\n";
 		} // End outer for
 		return s;
-	}
+	} // end toString
 	
 	public static void main(String [] args) {
 		Board board = Board.getInstance();
 		System.out.println(board);
-		System.out.println(board.move(new Point(0, 6), new Point(0, 5)));
-		System.out.println(board);
-	}
-}
+	} // end main
+} // end class
