@@ -50,11 +50,9 @@ public class Board {
 	
 	private Piece pieceAtPoint(Point p) {
 		return board.get(p.hashCode());
-		//return board[p.getX()][p.getY()];
 	}
 	
 	private void setPieceAtPoint(Point p, Piece piece) {
-		//board[p.getX()][p.getY()] = piece;
 		board.put(p.hashCode(), piece);
 	}
 	
@@ -74,13 +72,12 @@ public class Board {
 			
 			return true;
 		} else {
-			// could not move
 			System.out.println("Board: can't move");
 			return false;
 		}
-	} // end move
+	}
 	
-	public static Point convertSquareToPoint(String square) {
+	public Point convertSquareToPoint(String square) {
 		int x = -1;
 		int y = -1;
 		char rank, file;
@@ -152,6 +149,8 @@ public class Board {
 	
 	public static void main(String [] args) {
 		Board board = Board.getInstance();
+		System.out.println(board);
+		board.move(board.convertSquareToPoint("e2"), board.convertSquareToPoint("e4"));
 		System.out.println(board);
 	} // end main
 } // end class

@@ -25,4 +25,8 @@ public class Point {
 	    hash = 71 * hash + this.y;
 	    return hash;
 	}
+	
+	public String toString() {
+		return "(" + x + "," + y + ")";
+	}
 }
