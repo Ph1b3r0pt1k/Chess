@@ -7,99 +7,120 @@ public class Bishop extends Piece {
 	public Bishop (Point location, boolean isWhite) {
 		this.location = location;
 		this.isWhite = isWhite;
-	} // End constructor
+	}
+	
 	public boolean canMove(Point dst) {
-		if (Math.abs(dst.getX() - location.getX()) == Math.abs(dst.getY() - location.getY())) { // Move is diagonal
-			try {
+		if (moveIsDiagonal(dst)) {
+			try {			
+				if (rightAndDown(dst)) {
+					return moveRightAndDown(dst);
+				}
 				
+				else if (rightAndUp(dst)) {
+					return moveRightAndUp(dst);
+				}
 				
-				if (dst.getX() > location.getX() && dst.getY() < location.getY()) { // Right, down
-					int i = location.getX();
-					int j = location.getY();
-					while (i < dst.getX() - 1) {
-						if (!Board.getInstance().thereIsPiece(new Point(i + 1, j - 1))) {
-							// keep going
-						} else {
-							System.out.println("Invalid move 1.");
-							return false;
-						}
-						i++;
-						j--;
-					} // end while
-				} // end right, down
+				else if (leftAndDown(dst)) {
+					return moveLeftAndDown(dst);
+				}
 				
-				else if (dst.getX() > location.getX() && dst.getY() > location.getY()) { // Right, up
-					int i = location.getX();
-					int j = location.getY();
-					while (i < dst.getX() - 1) {
-						if (!Board.getInstance().thereIsPiece(new Point(i + 1, j + 1))) {
-							// keep going
-						} else {
-							System.out.println("Invalid move 2.");
-							return false;
-						}
-						i++;
-						j++;
-					} // end while
-				} // end right, up
-				
-				else if (dst.getX() < location.getX() && dst.getY() < location.getY()) { // Left, down
-					int i = location.getX();
-					int j = location.getY();
-					while (i > dst.getX() + 1) {
-						if (!Board.getInstance().thereIsPiece(new Point(i - 1, j - 1))) {
-							// keep going
-						} else {
-							System.out.println("Invalid move 3.");
-							return false;
-						}
-						i--;
-						j--;
-					} // end while
-				} // end left, down
-				
-				else if (dst.getX() < location.getX() && dst.getY() > location.getY()) { // Left, up
-					int i = location.getX();
-					int j = location.getY();
-					while (i > dst.getX() + 1) {
-						if (!Board.getInstance().thereIsPiece(new Point(i - 1, j + 1))) {
-							// keep going
-						} else {
-							System.out.println("Invalid move 4.");
-							return false;
-						}
-						i--;
-						j++;
-					} // end while
-				} // end left, up
+				else if (leftAndUp(dst)) {
+					return moveLeftAndUp(dst);
+				}
 				
 				else {
-					System.out.println("Invalid (and strange) move.");
 					return false;
 				}
-				return !isFriendly(dst);
 				
 			} catch (InvalidPointException e) {
-				System.out.println("Invalid point exception.");
 				return false;
 			} catch (NoPieceAtPointException e) {
 				return true;
 			}
-		} // end move is diagonal
-		
+		}
 		
 		else {
-			System.out.println("Move is not diagonal.");
 			return false;
 		}
-	} // end canMove
+	}
+	
+	private boolean moveIsDiagonal(Point dst) {
+		return Math.abs(dst.getX() - location.getX()) == Math.abs(dst.getY() - location.getY());
+	}
+
+	private boolean rightAndDown(Point dst) {
+		return dst.getX() > location.getX() && dst.getY() < location.getY();
+	}
+	
+	private boolean rightAndUp(Point dst) {
+		return dst.getX() > location.getX() && dst.getY() < location.getY();
+	}
+	
+	private boolean leftAndDown(Point dst) {
+		return dst.getX() < location.getX() && dst.getY() < location.getY();
+	}
+	
+	private boolean leftAndUp(Point dst) {
+		return dst.getX() < location.getX() && dst.getY() > location.getY();
+	}
+
+	private boolean moveLeftAndUp(Point dst) throws InvalidPointException, NoPieceAtPointException {
+		int i = location.getX();
+		int j = location.getY();
+		while (i > dst.getX() + 1) {
+			if (Board.getInstance().thereIsPiece(new Point(i - 1, j + 1))) return false;
+			else {
+				i--;
+				j++;
+			}
+		}
+
+		return !isFriendly(dst);
+	}
+
+	private boolean moveLeftAndDown(Point dst) throws InvalidPointException, NoPieceAtPointException {
+		int i = location.getX();
+		int j = location.getY();
+		while (i > dst.getX() + 1) {
+			if (Board.getInstance().thereIsPiece(new Point(i - 1, j - 1))) return false;	
+			else {
+				i--;
+				j--;
+			}
+		}
+		
+		return !isFriendly(dst);
+	}
+
+	private boolean moveRightAndUp(Point dst) throws InvalidPointException, NoPieceAtPointException {
+		int i = location.getX();
+		int j = location.getY();
+		while (i < dst.getX() - 1) {
+			if (Board.getInstance().thereIsPiece(new Point(i + 1, j + 1))) return false;
+			else {
+				i++;
+				j++;
+			}
+		}
+		
+		return !isFriendly(dst);
+	}
+
+	private boolean moveRightAndDown(Point dst) throws InvalidPointException, NoPieceAtPointException {
+		int i = location.getX();
+		int j = location.getY();
+		while (i < dst.getX() - 1) {
+			if (Board.getInstance().thereIsPiece(new Point(i + 1, j - 1))) return false;
+			else {
+				i++;
+				j--;
+			}
+		}
+		
+		return !isFriendly(dst);
+	}
 
 	public String toString() {
-		if (isWhite == true) {
-			return "WB";
-		}
-		else {
-			return "BB";
-		}
-	} // End toString
-} // End class
+		return (isWhite) ? "WB" : "BB";
+	}
+}

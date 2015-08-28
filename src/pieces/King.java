@@ -7,9 +7,10 @@ public class King extends Piece {
 		this.location = location;
 		this.isWhite = isWhite;
 	}
+	
 	public boolean canMove(Point dst) {
 		try {
-			if (Math.abs(location.getX() - dst.getX()) <= 1 && Math.abs(location.getY() - dst.getY()) <= 1) {
+			if (moveIsOneSquare(dst)) {
 				return !isFriendly(dst);
 			}
 			else {
@@ -19,17 +20,15 @@ public class King extends Piece {
 		} catch (NoPieceAtPointException e) {
 			return true;
 		} catch (InvalidPointException e) {
-			System.out.println("Invalid point exception.");
 			return false;
 		}
-	} // End move
+	}
+	
+	private boolean moveIsOneSquare(Point dst) {
+		return Math.abs(location.getX() - dst.getX()) <= 1 && Math.abs(location.getY() - dst.getY()) <= 1;
+	}
 
 	public String toString() {
-		if (isWhite == true) {
-			return "WK";
-		}
-		else {
-			return "BK";
-		}
-	} // End toString
-} // End class
+		return (isWhite) ? "WK" : "BK";
+	}
+}

@@ -10,40 +10,30 @@ public class Knight extends Piece {
 	public Knight(Point location, boolean isWhite) {
 		this.location = location;
 		this.isWhite = isWhite;
-	} // End constructor
-
-	public String toString() {
-		if (isWhite == true) {
-			return "WN";
-		}
-		else {
-			return "BN";
-		}
-	} // End toString
-	@Override
+	}
+	
 	public boolean canMove(Point dst) {
 		try {
-			if (Board.getInstance().isInvalidPoint(dst)) {
-				return false;
-			}
-			for (Point p : this.generateMoves()) {
-				if (p.getX() == dst.getX() && p.getY() == dst.getY()) {
-					if (isFriendly(dst)) {
-						return false;
-					} else {
-						return true;
-					}
+			if (Board.getInstance().isInvalidPoint(dst)) return false;
+			
+			for (Point p : this.possibleKnightMoves()) {
+				if (pointIsKnightMove(p, dst)) {
+					return !isFriendly(dst);
 				}
-			} // end for
+			}
 			return false;
+			
 		} catch (InvalidPointException e) {
-			System.out.println("Can't move. Invalid point exception.");
 			return false;
 		} catch (NoPieceAtPointException e) {
 			return true;
 		}
-	} // end canMove
-	private ArrayList<Point> generateMoves() {
+	}
+	private boolean pointIsKnightMove(Point p, Point dst) {
+		return p.getX() == dst.getX() && p.getY() == dst.getY();
+	}
+
+	private ArrayList<Point> possibleKnightMoves() {
 		ArrayList<Point> moves = new ArrayList<Point>();
 		moves.add(new Point(location.getX() + 2, location.getY() + 1));
 		moves.add(new Point(location.getX() + 2, location.getY() - 1));
@@ -55,4 +45,8 @@ public class Knight extends Piece {
 		moves.add(new Point(location.getX() - 1, location.getY() - 2));
 		return moves;
 	}
-} // End class
+	
+	public String toString() {
+		return (isWhite) ? "WN" : "BN";
+	}
+}

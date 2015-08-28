@@ -11,78 +11,33 @@ public class Pawn extends Piece {
 		this.location = location;
 		this.isWhite = isWhite;
 		hasMoved = false;
-	} // End constructor
+	}
 
 	public boolean canMove(Point dst) {
 		try {
-			int moveDist = -1;
-			// Forward move, no capture
-			if (dst.getX() == location.getX()) {
-				
-				// Forward movement only
-				if (this.isWhite()) { // White pawn
-					if (dst.getY() <= location.getY()) {
-						System.out.println("Pawns must move forward.");
-						return false;
-					}
-				} // end if
-				else { // Black pawn
-					if (dst.getY() >= location.getY()) {
-						System.out.println("Pawns must move forward.");
-						return false;
-					}
-				} // end else
-				
-				moveDist =  dst.getY() - location.getY();
-				
-				if (Math.abs(moveDist) != 1 && Math.abs(moveDist) != 2) {
-					return false;
-				}
-				
-				if (Math.abs(moveDist) == 2) {
-					if (hasMoved) {
-						System.out.println("That piece has already moved.");
-						return false;
-					} else {
-						// check square in middle
-						if (moveDist < 0) {
-							if (Board.getInstance().thereIsPiece(new Point(location.getX(), location.getY() - 1))) {
-								return false;
-							}
-						} else {
-							if (Board.getInstance().thereIsPiece(new Point(location.getX(), location.getY() + 1))) {
-								return false;
-							}
-						}
-					}
-				}
-				
-				// check destination square
-				if (Board.getInstance().thereIsPiece(dst)) {
-					return false;
-				}
-				
-				hasMoved = true;
-				return true;
-				
-			} // end if - forward move, no capture
 			
-			if (!(Math.abs(location.getX() - dst.getX()) == 1 && Math.abs(location.getY() - dst.getY()) == 1)) {
-				return false;
+			int moveDist =  dst.getY() - location.getY();
+			if (moveIsStraight(dst)) {
+				
+				if (!moveIsForward(dst)) return false;
+				
+				if (!moveIsOneOrTwoSquaresForward(moveDist)) return false;
+				
+				if (moveIsTwoSquaresForward(moveDist)) {
+					if (hasMoved) return false;
+					else if (thereIsPieceOnMiddleSquare(moveDist)) return false;
+				}
+				
+				if (thereIsPieceAtDestination(dst)) return false;
+				else {
+					hasMoved = true;
+					return true;
+				}
 			}
 			
-			if (this.isWhite()) { // White pawn
-				if (dst.getY() <= location.getY()) {
-					System.out.println("Pawns must move forward.");
-					return false;
-				}
-			} // end if
-			else { // Black pawn
-				if (dst.getY() >= location.getY()) {
-					System.out.println("Pawns must move forward.");
-					return false;
-				}
-			} // end else
+			if (!isCapture(dst)) return false;
+			
+			if (!moveIsForward(dst)) return false;
 			
 			if (!isFriendly(dst)) {
 				hasMoved = true;
@@ -95,14 +50,57 @@ public class Pawn extends Piece {
 		} catch (NoPieceAtPointException e) {
 			return false;
 		}
-	} // End canMove
+	}
+	
+	private boolean isCapture(Point dst) {
+		return Math.abs(location.getX() - dst.getX()) == 1 && Math.abs(location.getY() - dst.getY()) == 1;
+	}
 
-	public String toString() {
-		if (isWhite == true) {
-			return "WP";
+	private boolean moveIsStraight(Point dst) {
+		return dst.getX() == location.getX();
+	}
+	
+	private boolean moveIsForward(Point dst) {
+		if (this.isWhite()) {
+			return !whitePawnMovingBackwards(dst);
+		} 
+		else {
+			return !blackPawnMovingBackwards(dst);
+		}
+	}
+	
+	private boolean moveIsOneOrTwoSquaresForward(int moveDist) {
+		return Math.abs(moveDist) == 1 || Math.abs(moveDist) == 2;
+	}
+	
+	private boolean moveIsTwoSquaresForward(int moveDist) {
+		return Math.abs(moveDist) == 2;
+	}
+	
+	private boolean thereIsPieceOnMiddleSquare(int moveDist) throws InvalidPointException {
+		if (moveDist < 0) {
+			if (Board.getInstance().thereIsPiece(new Point(location.getX(), location.getY() - 1))) return true;
 		}
 		else {
-			return "BP";
+			if (Board.getInstance().thereIsPiece(new Point(location.getX(), location.getY() + 1))) return true;
 		}
-	} // End toString
-} // End class
+		
+		return false;
+	}
+	
+	private boolean thereIsPieceAtDestination(Point dst) throws InvalidPointException {
+		return Board.getInstance().thereIsPiece(dst);
+	}
+	
+	private boolean whitePawnMovingBackwards(Point dst) {
+		return dst.getY() <= location.getY();
+	}
+	
+	private boolean blackPawnMovingBackwards(Point dst) {
+		return dst.getY() >= location.getY();
+	}
+
+	public String toString() {
+		return (isWhite) ? "WP" : "BP";
+	}
+}
